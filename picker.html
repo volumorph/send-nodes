@@ -1,0 +1,87 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2a2a2a;display:flex;gap:8px;padding:0;overflow:hidden;user-select:none}
+.colorpicker{position:relative;width:257px;height:257px}
+.colorpicker_square{position:absolute;top:0;left:0;display:block}
+.colorpicker_slider{display:block}
+svg{pointer-events:none;position:absolute;top:0;left:0}
+input{background:#1a1a1a;border:1px solid rgba(255,255,255,.08);border-radius:4px;color:#f5f5f5;font:13px monospace;padding:3px 6px;outline:none;width:100%}
+</style></head><body>
+<div id="root"></div>
+<script src="colorconversion.js"></script>
+<script src="constants.js"></script>
+<script src="render.js"></script>
+<script src="hsluv.js"></script>
+<script>
+const SZ=257,SW=31,eps=0.0001;
+function clamp(x){return x<eps?eps:x>1-eps?1-eps:x}
+let r=255,g=0,b=0;
+
+// Получаем hex из URL параметра
+let m=location.search.match(/hex=([0-9a-fA-F]{6})/);
+if(m){let h=m[1];r=parseInt(h.slice(0,2),16);g=parseInt(h.slice(2,4),16);b=parseInt(h.slice(4,6),16)}
+
+// Создаём canvas элементы как у Оттоссона
+let root=document.getElementById('root');
+root.innerHTML='<div style="position:relative;width:'+SZ+'px;height:'+SZ+'px">'+
+  '<canvas class="colorpicker_square" id="hs" width="'+SZ+'" height="'+SZ+'"></canvas>'+
+  '<svg width="'+SZ+'" height="'+SZ+'">'+
+    '<g id="hs_manip"><circle cx="0" cy="0" r="5" fill="none" stroke-width="1.75" stroke="#fff"/><circle cx="0" cy="0" r="6" fill="none" stroke-width="1.25" stroke="#000"/></g>'+
+  '</svg></div>'+
+  '<canvas class="colorpicker_slider" id="l" width="'+SW+'" height="'+SZ+'" style="border-radius:4px"></canvas>'+
+  '<svg width="'+(SW+10)+'" height="'+SZ+'" style="left:-5px">'+
+    '<g id="l_manip"><polygon points="0,0 -8,-4 -8,4" fill="#fff" stroke-width="0.8" stroke="#000"/><polygon points="'+SW+',0 '+(SW+8)+',-4 '+(SW+8)+',4" fill="#fff" stroke-width="0.8" stroke="#000"/></g>'+
+  '</svg>';
+
+let hs=document.getElementById('hs'), lc=document.getElementById('l');
+let hsManip=document.getElementById('hs_manip'), lManip=document.getElementById('l_manip');
+
+function renderAll(){
+  let hsl=srgb_to_okhsl(r,g,b);
+  let res={}; render_hsl("okhsl",srgb_to_okhsl,okhsl_to_srgb,res);
+  // HS canvas
+  let ctx=hs.getContext('2d'); hs.width=SZ; hs.height=SZ;
+  ctx.putImageData(res.okhsl_hs,0,0);
+  // L canvas (цветной градиент lightness для текущих H,S)
+  let d=new Uint8ClampedArray(SZ*SW*4);
+  for(let i=0;i<SZ;i++){let l=clamp(1-i*(1/SZ)),[rr,gg,bb]=okhsl_to_srgb(hsl[0],hsl[1],l);
+    for(let j=0;j<SW;j++){let idx=4*(i*SW+j);d[idx]=Math.max(0,Math.min(255,rr));d[idx+1]=Math.max(0,Math.min(255,gg));d[idx+2]=Math.max(0,Math.min(255,bb));d[idx+3]=255}}
+  lc.width=SW;lc.height=SZ;lc.getContext('2d').putImageData(new ImageData(d,SW),0,0)
+  // Manipulators
+  let ha=0.5+0.5*hsl[1]*Math.cos(hsl[0]*2*Math.PI),hb=0.5+0.5*hsl[1]*Math.sin(hsl[0]*2*Math.PI);
+  hsManip.setAttribute('transform','translate('+(SZ*ha)+','+(SZ*(1-hb))+')');
+  lManip.setAttribute('transform','translate(0,'+(SZ*(1-hsl[2]))+')');
+  // Сообщаем родителю (React) новый hex
+  let hex=rgb_to_hex(r,g,b);
+  try{window.parent.postMessage({type:'color',hex:hex},'*')}catch(e){}
+  // URL параметр для инициализации
+  try{history.replaceState(null,'','?hex='+hex.slice(1))}catch(e){}
+}
+
+// Mouse/touch handlers (как у Оттоссона)
+let mouseHandler=null;
+function setupHandler(canvas,handler){
+  let fn=function(e){e.preventDefault();let rect=canvas.getBoundingClientRect();handler(e.clientX-rect.left,e.clientY-rect.top);renderAll()};
+  canvas.addEventListener('mousedown',function(e){mouseHandler=fn;fn(e)});
+  canvas.addEventListener('touchstart',function(e){if(e.touches.length===1){mouseHandler=fn;fn(e.touches[0])}});
+}
+document.addEventListener('mousemove',function(e){if(mouseHandler)mouseHandler(e)});
+document.addEventListener('mouseup',function(e){mouseHandler=null});
+document.addEventListener('touchmove',function(e){if(mouseHandler&&e.touches.length===1)mouseHandler(e.touches[0])});
+document.addEventListener('touchend',function(){mouseHandler=null});
+
+setupHandler(hs,function(x,y){
+  let a_=2*(y/SZ)-1,b_=2*(1-x/SZ)-1,dist=Math.sqrt(a_*a_+b_*b_);if(dist>1)return;
+  let hsl=srgb_to_okhsl(r,g,b),h=0.5+0.5*Math.atan2(a_,b_)/Math.PI;
+  [r,g,b]=okhsl_to_srgb(h,dist,hsl[2])
+});
+setupHandler(lc,function(x,y){
+  let l=clamp(1-y/SZ),hsl=srgb_to_okhsl(r,g,b);
+  [r,g,b]=okhsl_to_srgb(hsl[0],hsl[1],l)
+});
+
+// Слушаем parent для установки цвета
+window.addEventListener('message',function(e){if(e.data&&e.data.hex){let h=e.data.hex.replace('#','');r=parseInt(h.slice(0,2),16);g=parseInt(h.slice(2,4),16);b=parseInt(h.slice(4,6),16);renderAll()}});
+
+renderAll();
+</script></body></html>
