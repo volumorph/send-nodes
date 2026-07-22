@@ -28,13 +28,6 @@
 | `Tab` / `Shift+Tab` | Переключить сокет (режим соединения) |
 | `Esc` | Отменить соединение / закрыть меню |
 
-## Стек
-
-- **Vite 8** + `vite-plugin-singlefile` → один `index.html` (~385 кБ)
-- **React 19**, Zustand, Zod, CSS-in-JS
-- **Blender addon**: раздаёт `dist/` на `:8888`, открывается через `webbrowser.open()`
-- Нет роутера, нет UI-библиотеки, нет Tailwind
-
 ## Ченджлог
 
 Полная история версий — [`CHANGELOG.md`](CHANGELOG.md).
