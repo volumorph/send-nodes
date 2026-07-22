@@ -1,5 +1,11 @@
 # Ченджлог
 
+## 0.1.11 — 2026-07-23
+- **Починена белая страница Vite dev server** — 4 корневые причины: (1) Vite Fast Refresh ломался на смешанных экспортах в `Controls.tsx` → разделён на `Controls.tsx` + `renderControl.tsx`; (2) Zustand v4 — отсутствовали каррированные скобки `create<AppState>()(...)`, generic игнорировался; (3) Zod schema — пропущен variant `"file"` в `controlDefSchema`; (4) Битый импорт `StartupData` в `storage/index.ts`
+- **Убран двойной рендер preview-проводов** — Wires.tsx больше не рисует свои preview, только `useConnectionDrag.previewWire` с корректным zoom/pan
+- **Dead code cleanup** — 6 неиспользуемых пропсов из WiresProps, мёртвая функция `renderWire` (11 стилей), неиспользуемые импорты, `NodePreview.tsx`
+- **Bundle:** 395.06 kB (gzip 113.37 kB)
+
 ## 0.1.10 — 2026-07-23
 - **Default startup для GitHub Pages** — `src/defaultStartup.ts` с графом пользователя (3 Mix Shader + Image Texture) вшит в билд. При первом открытии GitHub Pages грузится твой граф
 - **Кнопка «Export Default»** — скачивает текущий стартап как JSON, который можно положить в `defaultStartup.ts`
