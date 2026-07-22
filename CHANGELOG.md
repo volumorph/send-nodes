@@ -1,99 +1,94 @@
-# Changelog
+# Ченджлог
 
 ## 0.1.9 — 2026-07-22
 ### Bundle Mode
-- `H` toggle — collapsed nodes with header only
-- Segmented connector balls (28×28px, r=14) — active/connected segments filled with socket color, inactive `#2a2a2a`
-- White stroke highlight on active segment during connection drag
-- Socket name label next to bundle ball when cycling
-- Merged wires by node pair — single thick bezier (3× width, no animation)
-- Connection drag preview snaps to bundle ball centers
-- Slider remains visible below collapsed header
+- `H` — переключение режима, ноды сворачиваются в заголовок
+- Сегментированные шары-коннекторы (28×28px, r=14) — активные/подключённые сегменты залиты цветом сокета, неактивные `#2a2a2a`
+- Активный сегмент подсвечивается белым контуром при переключении сокетов
+- Имя сокета отображается рядом с шаром при циклинге
+- Провода между двумя нодами сливаются в один толстый безель (3× ширина, без анимации)
+- Превью-провод при drag идёт от центра шара к центру шара
+- Слайдер остаётся видимым под свёрнутым заголовком
 
-### Shortcuts
-- `Tab` / `Shift+Tab` — cycle output/input sockets (works alongside mouse wheel)
-- Shortcuts list split into **General** / **Connection** sections
+### Шорткаты
+- `Tab` / `Shift+Tab` — циклинг сокетов (работает вместе с колёсиком мыши)
+- Список шорткатов разбит на разделы **General** / **Connection**
 
-### Docs
-- `WEBARCCONTEXT.md` — WebView2 embedding path documented
+### Доки
+- `WEBARCCONTEXT.md` — документирован путь WebView2 embedding
 
 ## 0.1.8 — 2026-07-22
 ### AddNodeMenu
-- Press **Space** inside menu to switch to search mode
-- Fuzzy match ranking: exact → prefix → contains → chars-in-order
-- Top 8 results, substring highlighting (`#FFD66B` bold)
-- `↑↓` navigate, `↵` add, `Esc` back to carousel
-- Match counter, clear (✕) button, soft pulse animation
+- **Space** внутри меню — поиск по названию ноды
+- Fuzzy-ранжирование: точное совпадение → префикс → вхождение → символы по порядку
+- Топ-8 результатов, подсветка совпадения (`#FFD66B` жирный)
+- `↑↓` навигация, `↵` добавить, `Esc` назад в карусель
+- Счётчик совпадений, кнопка очистки (✕), мягкая pulse-анимация
 
 ## 0.1.7 — 2026-07-22
 ### Save as Startup
-- Full graph persistence (nodes + connections + nodeDef + fontFamily)
-- `startupDataSchema` extended with optional `nodes` / `connections`
-- Legacy v0.1.6 saves backward-compatible (fallback to single default node)
+- Полное сохранение графа (ноды + соединения + nodeDef + fontFamily)
+- `startupDataSchema` расширен опциональными `nodes` / `connections`
+- Обратная совместимость с v0.1.6 (загрузка одной ноды по умолчанию)
 
 ## 0.1.6 — 2026-07-22
 ### Save as Startup Fix
-- Fixed data corruption — `saveToDisk` no longer merges values across node instances
-- Toast confirmation on successful save
-- `syncDefaults` no longer strips keys from secondary nodes
+- Исправлена порча данных — `saveToDisk` больше не сливает values разных нод
+- Toast-подтверждение при успешном сохранении
+- `syncDefaults` больше не удаляет ключи вторичных нод
 
 ## 0.1.5 — 2026-07-22
-### Wire Animation Stability
-- `effectiveWireOptions` stabilised via `useMemo` — prevents `pathHtml` recompute on every render
-- `performance.now()` hoisted once per frame — all wires share same animation phase
-- `ensureKeyframes` mutates `<style>` element — Dash slider actually works
-- `-0` boundary glitch in `animation-delay` fixed
+### Стабильность анимации проводов
+- `effectiveWireOptions` стабилизирован через `useMemo` — `pathHtml` не пересчитывается на каждый рендер
+- `performance.now()` один раз на кадр — все провода в одной фазе анимации
+- `ensureKeyframes` мутирует `<style>` — слайдер Dash реально работает
+- Исправлен глитч `-0` в `animation-delay`
 
 ## 0.1.4 — 2026-07-22
 ### Wire Animation Fix
-- Negative `animation-delay` synced via `performance.now()` — no jitter on node drag
-- Defaults: `dashed: true, animated: true`
-- SVG `translateZ(0)` compositor layer isolation
-- 3 dead-code symbols removed from `Canvas.tsx`
+- Отрицательный `animation-delay` через `performance.now()` — никаких рывков при drag
+- По умолчанию `dashed: true, animated: true`
+- SVG `translateZ(0)` — композиторный слой
+- Удалены 3 мёртвых символа из `Canvas.tsx`
 
 ## 0.1.3 — 2026-07-22
-### Performance
+### Производительность
 - Viewport + wire culling (800px margin)
-- `innerHTML` wires — SVG paths as string → `dangerouslySetInnerHTML`
-- `React.memo` on Node + Wires
-- `contain: layout style` + `will-change: transform` on node during drag
-- RAF animation removed — sliders use `const anim = raw`
-- `animationsEnabled` for conditional CSS transitions
-
-### Slider
-- CSS transition on thumb (`left .12s`), disabled during active drag
-- ~~RAF idle-stop~~ (was added, then removed with RAF)
+- `innerHTML` провода — SVG-path строки → `dangerouslySetInnerHTML`
+- `React.memo` на Node + Wires
+- `contain: layout style` + `will-change: transform` на ноде во время drag
+- RAF-анимация удалена — слайдеры через `const anim = raw`
+- `animationsEnabled` для условных CSS-транзиций
 
 ### Color Picker
-- Two-column layout: HS circle + sliders/hex
-- HSV math, 8-digit hex output
-- Smooth lerp animation (factor 0.12)
+- Две колонки: HS круг + слайдеры/hex
+- HSV математика, 8-значный hex
+- Плавная lerp-анимация (factor 0.12)
 
 ## 0.1.2 — 2026-07-19
 ### AddNodeMenu
-- 2-level carousel: category → node
-- 11 Blender 5.2 categories
-- Breadcrumb animation (`slideFromRight`, 0.15s)
-- Spawn at mouse position
-- Russian layout support (`e.code`)
+- 2-уровневая карусель: категория → нода
+- 11 категорий Blender 5.2
+- Анимация breadcrumb (`slideFromRight`, 0.15s)
+- Спавн в позиции мыши
+- Поддержка русской раскладки (`e.code`)
 
 ## 0.1.1 — 2026-07-21
 ### Multi-select
-- Shift+click toggle multi-select (white border)
-- `X` deletes all selected nodes + connections
-- Box selection — drag on empty canvas
-- `Shift+D` duplicates all selected nodes
-- `G` works with box-selected nodes
-- RAF box rendering
+- Shift+клик — мультивыделение (белая рамка)
+- `X` удаляет все выбранные ноды + соединения
+- Box selection — drag по пустому полю
+- `Shift+D` дублирует все выбранные ноды
+- `G` работает с box-выбранными нодами
 
 ## 0.1.0 — 2026-07-21
-### Initial Release
-- Body-drag connections
-- Node CRUD (add, duplicate, delete)
-- Viewport controls (zoom, pan, reset)
-- Color picker (Oklch)
-- Animations toggle
-- Focus mode (F)
-- Wire styles (bezier, straight, step, wave, etc.)
-- Save/Load via localStorage
+### Первый релиз
+- Body-drag соединения
+- CRUD нод (добавить, дублировать, удалить)
+- Управление вьюпортом (зум, pan, сброс)
+- Color Picker (Oklch)
+- Переключатель анимаций
+- Focus Mode (F)
+- Стили проводов (bezier, straight, step, wave и др.)
+- Сохранение/загрузка через localStorage
 - Blender addon → `webbrowser.open()`
