@@ -1,5 +1,10 @@
 # Ченджлог
 
+## 0.1.10 — 2026-07-23
+- **Default startup для GitHub Pages** — `src/defaultStartup.ts` с графом пользователя (3 Mix Shader + Image Texture) вшит в билд. При первом открытии GitHub Pages грузится твой граф
+- **Кнопка «Export Default»** — скачивает текущий стартап как JSON, который можно положить в `defaultStartup.ts`
+- **Box Selection** — починен RAF-цикл: линия выделения снова видна
+
 ## 0.1.9 — 2026-07-23
 - **Рефакторинг:** Canvas.tsx (975→370 строк, −21%) и Node/index.tsx (612→230, −47%) разбиты на хуки и компоненты
 - **Новые файлы:** `useCanvasShortcuts`, `useConnectionDrag`, `useBoxSelect`, `ShortcutsPanel`, `CanvasToolbar`, `Sockets`, `Header`, расширен `Controls`
