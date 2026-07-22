@@ -9,6 +9,7 @@
 - **11 стилей проводов**: bezier, straight, step, wave, zigzag, arc, double, ribbon, glow, tapered, dot-flow
 - **Анимация проводов**: синхронизированный dash flow через `performance.now()`, композиторный слой SVG
 - **Bundle Mode** (`H`): свёрнутые ноды с сегментированными шарами-коннекторами, объединённые провода
+- **Типы нод**: Color Mix (микшер цвета), Image Texture (загрузка файлов + превью под карточкой)
 - **Focus Mode** (`F`): затемнение несвязанных нод
 - **Color Picker**: Oklch, HS круг, RGB/HSV, hex, плавная lerp-анимация
 - **AddNode Menu** (`Shift+A`): карусель из 2 уровней + поиск по Space с fuzzy-фильтром
