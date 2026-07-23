@@ -1,5 +1,14 @@
 # Ченджлог
 
+## 0.1.12 — 2026-07-23
+- **Bidirectional connection drag** — можно вести провод от input-сокета к output другой ноды (обратное направление). Клик на input-сокет стартует drag вместо удаления connection
+- **Alt + клик = disconnect** — зажал Alt и кликнул на input или output сокет → существующий connection удаляется
+- **Alt во время body drag = flip output↔input** — double-click по карточке, затем нажатие Alt переключает направление drag с output на input и обратно. Не нужно заново стартовать
+- **Input socket labels при body drag** — при Alt-flip на input-сокеты: source input подсвечивается, label с названием появляется (scale 1.4, цвет заполнения)
+- **Target label fix при reverse drag** — `activeInput` ищет target и в inputs, и в outputs — label цели корректно показывается независимо от направления
+- **Убран ALT+double-click** — неудобный, заменён на Alt во время drag
+- **Убран Alt+hover disconnect** — слишком агрессивно, оставлен только Alt+click
+
 ## 0.1.11 — 2026-07-23
 - **Починена белая страница Vite dev server** — 4 корневые причины: (1) Vite Fast Refresh ломался на смешанных экспортах в `Controls.tsx` → разделён на `Controls.tsx` + `renderControl.tsx`; (2) Zustand v4 — отсутствовали каррированные скобки `create<AppState>()(...)`, generic игнорировался; (3) Zod schema — пропущен variant `"file"` в `controlDefSchema`; (4) Битый импорт `StartupData` в `storage/index.ts`
 - **Убран двойной рендер preview-проводов** — Wires.tsx больше не рисует свои preview, только `useConnectionDrag.previewWire` с корректным zoom/pan
