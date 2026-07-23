@@ -1,5 +1,25 @@
 # Ченджлог
 
+## 0.1.14 — 2026-07-23
+- **Красная точка на connected сокетах при Alt** — зажал Alt → все подключенные сокеты заливаются `#ff1c1cfa` (не кольцо, а полностью заполненный круг). Работает и на Alt-один (сигнал «кликни для дисконнекта»), и на Alt+Shift (sweep-режим)
+- **`altActive` state для реактивной подсветки** — refs не триггерят ререндер; теперь `setAltActive(altHeldRef.current)` в keydown/keyup → Canvas → Node → Sockets реагируют мгновенно
+- **Рефакторинг RAF-блоков** — `detectHoverTarget(source)` в `useConnectionDrag` заменил 2 идентичных блока (body-drag и socket-click) на один вызов с shared логикой
+- **`disconnectMode` пропс** — заменил `sweepActive` в Sockets/Node для визуальной подсветки; `sweepActive` остался только для курсора (crosshair) и handleSocketEnter
+- **Очистка мёртвого кода** — убран `sweepActive` из SocketsProps и Node (не использовался после замены на disconnectMode)
+- **Bundle:** 404.15 kB (gzip 115.36 kB)
+
+## 0.1.13 — 2026-07-23
+- **Alt + hover = disconnect (Blender-style wire cut)** — зажал Alt, провёл курсором по сокетам/сегментам бублика → все отключаются. Не нужно кликать. Браузерное меню и выделение текста заблокированы (`e.preventDefault()` + `user-select: none` + `selectstart` listener)
+- **Box Select отключён при Alt** — Alt+hover не вызывает случайный box select
+- **Unification connection logic** — `resolveCanConnect(dragSide, src, tgt)` и `resolveConnEndpoints(drag, target)` в `graph/index.ts`. Убрано 8 повторов if/else в Canvas и useConnectionDrag (~40 строк → 10)
+- **Bundle: donut-сегменты вместо пиццы** — кольцо с отверстием в центре (rInner=8, R=14), зазор 3° между сегментами, точка соединения в центре с отступом. `overflow: visible` убирает обрезку обводки
+- **Bundle: reverse connection + провода от центров** — bidirectional подсветка сегментов, `previewWire` от центров шаров в Bundle mode (`getBundleCenter`)
+- **Bundle: лейблы и колёсико при клике на сегмент** — клик по сегменту показывает имя сокета, колёсико переключает сегменты, target-сегменты подсвечиваются при наведении на чужой бублик
+- **Sweep-отключение в Bundle** — сегменты бублика теперь React SVG (не innerHTML), кликабельны для Alt+disconnect
+- **Toast undo/redo** — полупрозрачная плашка «Undo»/«Redo» при Ctrl+Z/Y
+- **Space-search на wire drag** — пробел во время body-drag открывает AddNodeMenu с фильтром по совместимым типам нод, авто-коннект после выбора
+- **ShortcutsPanel обновлён** — все новые шорткаты (Mute, Undo/Redo, Alt+hover disconnect, Space-search, Alt-flip, cycle target)
+
 ## 0.1.12 — 2026-07-23
 - **Bidirectional connection drag** — можно вести провод от input-сокета к output другой ноды (обратное направление). Клик на input-сокет стартует drag вместо удаления connection
 - **Alt + клик = disconnect** — зажал Alt и кликнул на input или output сокет → существующий connection удаляется
