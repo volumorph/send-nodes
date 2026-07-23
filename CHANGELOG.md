@@ -1,5 +1,18 @@
 # Ченджлог
 
+## 0.1.17 — 2026-07-24
+- **Alt/Shift fix** — `e.preventDefault()` для Alt предотвращает перехват фокуса браузером. Alt и Shift+Alt работают стабильно
+- **Socket-click card completion** — клик по карточке целевой ноды завершает socket-click соединение; колёсико циклит совместимые сокеты
+- **commitSocketConnection** — общая функция создания соединения, убрана дупликация из handleSocketClick и handleNodeSelect
+- **Bundle: donut hover fix** — названия сокетов и подсветка сегментов работают для input и output сторон при connection drag
+- **Bundle: socket labels 1.5×** — лейблы увеличены с 11px до 16px, font-weight 500
+
+## 0.1.16 — 2026-07-23
+- **Import Default** — кнопка «Import Default» + Ctrl+Shift+I для сброса к заводским настройкам (очистка localStorage + reload)
+
+## 0.1.15 — 2026-07-23
+- **Архитектурный рефакторинг:** appStore → 3 Zustand слайса (graph/ui/config), Wires → wireStyles.ts, Canvas → useConnections.ts. 44 теста (+22 graphSlice). Исправлен баг fontFamily.
+
 ## 0.1.14 — 2026-07-23
 - **Красная точка на connected сокетах при Alt** — зажал Alt → все подключенные сокеты заливаются `#ff1c1cfa` (не кольцо, а полностью заполненный круг). Работает и на Alt-один (сигнал «кликни для дисконнекта»), и на Alt+Shift (sweep-режим)
 - **`altActive` state для реактивной подсветки** — refs не триггерят ререндер; теперь `setAltActive(altHeldRef.current)` в keydown/keyup → Canvas → Node → Sockets реагируют мгновенно
