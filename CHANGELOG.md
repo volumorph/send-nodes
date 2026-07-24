@@ -1,5 +1,13 @@
 # Ченджлог
 
+## 0.1.18 — 2026-07-24
+- **Color Picker: HSL+A mode** — третий слайдер V/L, gamma PERCEPTUAL/LINEAR, copy/paste с умной кнопкой, HEX copy/paste
+- **Copy/paste value** — копируешь → кнопка пропадает, переключаешь слайдер → иконка вставки, жмёшь → зелёная галочка на 600ms
+- **HEX copy/paste** — то же поведение на HEX поле: копирование, скрытие, вставка на другом контроле
+- **Compass dashes** — 6 цветных дуг на кольце, checkerboard alpha, Cyrillic HEX input (А→A, В→B…)
+- **Pointer freeze fix** — releasePointerCapture + глобальный safety‑net listener
+- **Slider styling** — дорожка 1/2px, thumb 8×8 circle, letter label fontSize 9, gap 6
+
 ## 0.1.17 — 2026-07-24
 - **Alt/Shift fix** — `e.preventDefault()` для Alt предотвращает перехват фокуса браузером. Alt и Shift+Alt работают стабильно
 - **Socket-click card completion** — клик по карточке целевой ноды завершает socket-click соединение; колёсико циклит совместимые сокеты

@@ -1,6 +1,6 @@
 # Send Nodes
 
-Веб-редактор нод в стиле Blender. Vite + React 19 + Zustand + Zod. **v0.1.14**
+Веб-редактор нод в стиле Blender. Vite + React 19 + Zustand + Zod. **v0.1.18**
 
 ## Возможности
 
